@@ -67,5 +67,3 @@ disk_error:
     call puts
     jmp wait_key_and_reboot
 
-msg_disk_error:
-    db "Read operation from disk failed", ENDL, 0
