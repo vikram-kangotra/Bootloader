@@ -1,8 +1,6 @@
 org 0x7c00
 bits 16
 
-%define ENDL 0x0a, 0x0d
-
 ; FAT12 header
 
 jmp short start
@@ -53,8 +51,7 @@ jmp halt
 
 %include "utility.asm"
 %include "disk.asm"
-
-hello: db 'Hello, world!', ENDL, 0x00
+%include "constants.asm"
 
 times 510-($-$$) db 0
 dw 0xaa55
