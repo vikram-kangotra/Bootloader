@@ -7,7 +7,7 @@ all: stage1
 
 stage1: $(BUILD_DIR)/stage1.bin
 
-$(BUILD_DIR)/stage1.bin: boot.asm utility.asm disk.asm constants.asm
+$(BUILD_DIR)/stage1.bin: boot.asm *.asm
 	$(ASM) -f bin -o $@ $<
 
 clean:
