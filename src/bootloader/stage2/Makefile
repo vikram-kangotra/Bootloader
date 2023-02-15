@@ -1,14 +1,33 @@
 BUILD_DIR?=build
-ASM?=nasm
+ASM=nasm
+ASMFLAGS=-f elf32
+CC=gcc
+CFLAGS=-m32 -nostdlib -fno-pie -ffreestanding
+LD=ld
+LDFLAGS=-m elf_i386 -T linker.ld -nostdlib
 
-.PHONY: all clean stage2
+SRC_C=$(wildcard *.c)
+SRC_ASM=$(wildcard *.asm)
+OBJ_C=$(patsubst %.c, $(BUILD_DIR)/stage2/c/%.o, $(SRC_C))
+OBJ_ASM=$(patsubst %.asm, $(BUILD_DIR)/stage2/asm/%.o, $(SRC_ASM))
 
-all: stage2
-	
+.PHONY: all clean always stage2
+
 stage2: $(BUILD_DIR)/stage2.bin
 
-$(BUILD_DIR)/stage2.bin: main.asm
-	$(ASM) -f bin -o $@ $<
+$(BUILD_DIR)/stage2.bin: $(OBJ_ASM) $(OBJ_C)
+	$(LD) $(LDFLAGS) -o $@ $^ --oformat binary
+
+$(BUILD_DIR)/stage2/asm/%.o: %.asm always
+	$(ASM) $(ASMFLAGS) -o $@ $<
+
+$(BUILD_DIR)/stage2/c/%.o: %.c always
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+always:
+	mkdir -p $(BUILD_DIR)/stage2/c
+	mkdir -p $(BUILD_DIR)/stage2/asm
 
 clean:
-	rm -rf $(BUILD_DIR)/stage2.bin
+	rm -rf $(BUILD_DIR)/stage2
+	rm -f $(BUILD_DIR)/stage2.bin

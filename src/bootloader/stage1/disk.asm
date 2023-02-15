@@ -1,10 +1,39 @@
-;
-; Reads sectors from a disk
-; Parameters:
-;   - ax: LBA Address
-;   - cl: Number of sectors to read
-;   - dl: Drive number
-;   - es:bx: Buffer to read into
+; converts a LBA address to CHS address
+; Params:
+;   %1 = LBA address
+; Returns:
+;   cx [0:5] = sector
+;   cx [6:15] = cylinder
+;   dh = head
+
+lba_to_chs:
+    ; lba = (cyl * heads + head) * sectors + sector - 1
+    ; cyl = lba / (heads * sectors)
+    ; head = (lba / sectors) % heads
+    ; sector = (lba % sectors) + 1
+
+    push ax
+    push dx
+
+    xor dx, dx
+    div word [bpb_sectors_per_track]
+
+    inc dx
+    mov cx, dx
+
+    xor dx, dx
+    div word [bpb_number_of_heads]
+
+    mov dh, dl
+    mov ch, al
+    shl ah, 6
+    or cl, ah
+
+    pop ax
+    mov dl, al
+    pop ax
+
+    ret
 
 disk_read:
     push ax
@@ -13,18 +42,16 @@ disk_read:
     push dx
     push di
 
-    push cx
     call lba_to_chs
-    pop ax
 
     mov ah, 0x02
-    mov di, 3                       ; retry 3 times
+    mov di, 3
 
 .retry:
     pusha
-    stc                             ; set carry flag
+    stc
     int 0x13
-    jnc .success
+    jnc .done
 
     popa
     call disk_reset
@@ -34,10 +61,9 @@ disk_read:
     jnz .retry
 
 .fail:
-    ; All attempts failed
     jmp disk_error
 
-.success:
+.done:
     popa
 
     pop di
@@ -45,17 +71,11 @@ disk_read:
     pop cx
     pop bx
     pop ax
-
     ret
-
-;
-; Resets disk controller
-; Parameters:
-;  - dl: Drive number
 
 disk_reset:
     pusha
-    mov ah, 0x00
+    mov ah, 0
     stc
     int 0x13
     jc disk_error
@@ -65,5 +85,5 @@ disk_reset:
 disk_error:
     mov si, msg_disk_error
     call puts
-    jmp wait_key_and_reboot
 
+    jmp wait_and_reboot

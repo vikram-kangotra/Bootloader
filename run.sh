@@ -1,1 +1,1 @@
-qemu-system-x86_64 build/os.img
+qemu-system-i386 build/os.img 
