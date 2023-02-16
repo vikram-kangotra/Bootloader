@@ -1,9 +1,8 @@
 BUILD_DIR?=build
 ASM=nasm
 ASMFLAGS=-f elf32
-CC=gcc
-CFLAGS=-m32 -nostdlib -fno-pie -ffreestanding
-LDFLAGS=-T linker.ld
+CFLAGS=-ffreestanding
+LDFLAGS=-T linker.ld -nostdlib -lgcc
 
 SRC_C=$(wildcard *.c)
 SRC_ASM=$(wildcard *.asm)
