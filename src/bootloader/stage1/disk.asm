@@ -42,7 +42,9 @@ disk_read:
     push dx
     push di
 
+    push cx
     call lba_to_chs
+    pop ax
 
     mov ah, 0x02
     mov di, 3

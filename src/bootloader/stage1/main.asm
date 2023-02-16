@@ -1,8 +1,8 @@
 [org 0x7c00]
 [bits 16]
 
-LOAD_SEGMENT equ 0x100
-LOAD_OFFSET equ 0x0
+LOAD_SEGMENT equ 0x0
+LOAD_OFFSET equ 0x500
 
 jmp short start
 nop
@@ -38,11 +38,11 @@ start:
     inc dh
     mov [bpb_number_of_heads], dh
 
-    mov ax, [bpb_number_of_fats]
-    mov bx, [bpb_sectors_per_fat]
+    mov ax, [bpb_sectors_per_fat]
+    mov bl, [bpb_number_of_fats]
+    xor bh, bh
     mul bx
     add ax, [bpb_reserved_sectors]
-    xor ah, ah
     push ax                              ; root dir start
 
     mov ax, [bpb_root_dir_entries]
@@ -94,9 +94,9 @@ start:
     mov es, bx
     mov bx, LOAD_OFFSET
 
-    mov ax, [file_cluster]
-
 .load_stage2_loop:
+
+    mov ax, [file_cluster]
 
     add ax, 31
 
@@ -128,7 +128,10 @@ start:
 
 .next_cluster_after:
     cmp ax, 0x0ff8
-    jl .load_stage2_loop
+    jae .end_of_file
+
+    mov [file_cluster], ax
+    jmp .load_stage2_loop
 
 .end_of_file:
     mov dl, [ebpb_drive_number]
