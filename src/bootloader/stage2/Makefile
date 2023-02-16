@@ -1,10 +1,9 @@
 BUILD_DIR?=build
 ASM=nasm
-ASMFLAGS=-f elf
+ASMFLAGS=-f elf32
 CC=gcc
 CFLAGS=-m32 -nostdlib -fno-pie -ffreestanding
-LD=ld
-LDFLAGS=-m elf_i386 -T linker.ld -nostdlib
+LDFLAGS=-T linker.ld
 
 SRC_C=$(wildcard *.c)
 SRC_ASM=$(wildcard *.asm)
@@ -16,7 +15,7 @@ OBJ_ASM=$(patsubst %.asm, $(BUILD_DIR)/stage2/asm/%.o, $(SRC_ASM))
 stage2: $(BUILD_DIR)/stage2.bin
 
 $(BUILD_DIR)/stage2.bin: $(OBJ_ASM) $(OBJ_C)
-	$(LD) $(LDFLAGS) -o $@ $^ --oformat binary
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 $(BUILD_DIR)/stage2/asm/%.o: %.asm always
 	$(ASM) $(ASMFLAGS) -o $@ $<
