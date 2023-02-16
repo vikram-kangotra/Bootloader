@@ -1,6 +1,6 @@
 BUILD_DIR?=build
 ASM=nasm
-ASMFLAGS=-f elf32
+ASMFLAGS=-f elf
 CC=gcc
 CFLAGS=-m32 -nostdlib -fno-pie -ffreestanding
 LD=ld

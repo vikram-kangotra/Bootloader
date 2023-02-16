@@ -12,7 +12,7 @@ uint8_t g_ScreenY = 0;
 void putchar(uint8_t x, uint8_t y, uint8_t c) {
     g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x)] = c;
 }
-/*
+
 void putcolor(uint8_t x, uint8_t y, uint8_t color) {
     g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x) + 1] = color;
 }
@@ -38,4 +38,3 @@ void clrscr(void) {
     g_ScreenX = 0;
     g_ScreenY = 0;
 }
-*/

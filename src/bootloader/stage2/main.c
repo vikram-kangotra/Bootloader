@@ -1,5 +1,9 @@
 #include "stdio.h"
+#include "string.h"
 
 void kmain() {
-    putchar(10, 10, 'e');
+    clrscr();
+    const char* name = "Hello, World 32-bit";
+
+    puts(name);
 }
