@@ -3,7 +3,6 @@
 
 void kmain() {
     clrscr();
-    const char* name = "Hello, World 32-bit";
 
-    puts(name);
+    printf("Hello, world! %x", 10);
 }

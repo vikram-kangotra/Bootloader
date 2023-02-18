@@ -25,6 +25,6 @@ always:
 	mkdir -p $(BUILD_DIR)
 
 clean:
-	$(MAKE) -C src/bootloader/stage1 clean
-	$(MAKE) -C src/bootloader/stage2 clean
+	$(MAKE) -C src/bootloader/stage1 BUILD_DIR=$(abspath $(BUILD_DIR)) clean
+	$(MAKE) -C src/bootloader/stage2 BUILD_DIR=$(abspath $(BUILD_DIR)) clean
 	rm -rf $(BUILD_DIR)/os.img

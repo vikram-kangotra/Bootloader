@@ -9,4 +9,7 @@ void puts(const uint8_t *s);
 
 void clrscr(void);
 
+void printf(const uint8_t* fmt, ...);
+
+
 #endif
