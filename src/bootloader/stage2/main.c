@@ -4,5 +4,5 @@
 void kmain() {
     clrscr();
 
-    printf("Hello, world! %x", 10);
+    printf("Hello, world! 0x%o", 1234);
 }

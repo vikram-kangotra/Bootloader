@@ -1,9 +1,10 @@
-BUILD_DIR=build
-CC=cross/bin/i686-elf-gcc
+include build_scripts/config.mk
 
 .PHONY: all clean bootloader
 
 all: os_image
+
+include build_scripts/toolchain.mk
 
 os_image: $(BUILD_DIR)/os.img
 
@@ -16,15 +17,15 @@ $(BUILD_DIR)/os.img: bootloader always
 bootloader: stage1 stage2
 
 stage1:
-	$(MAKE) -C src/bootloader/stage1 BUILD_DIR=$(abspath $(BUILD_DIR)) CC=$(abspath $(CC))
+	$(MAKE) -C src/bootloader/stage1
 
 stage2:
-	$(MAKE) -C src/bootloader/stage2 BUILD_DIR=$(abspath $(BUILD_DIR)) CC=$(abspath $(CC))
+	$(MAKE) -C src/bootloader/stage2
 
 always:
 	mkdir -p $(BUILD_DIR)
 
 clean:
-	$(MAKE) -C src/bootloader/stage1 BUILD_DIR=$(abspath $(BUILD_DIR)) clean
-	$(MAKE) -C src/bootloader/stage2 BUILD_DIR=$(abspath $(BUILD_DIR)) clean
+	$(MAKE) -C src/bootloader/stage1 clean
+	$(MAKE) -C src/bootloader/stage2 clean
 	rm -rf $(BUILD_DIR)/os.img
