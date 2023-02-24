@@ -1,2 +1,2 @@
-# Miosis
-A repository for my curious mind to understand OS Development from low level
+# Booloader
+A repository for my curious mind to understand Bootloaders from low level.
